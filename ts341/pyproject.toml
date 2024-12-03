@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "ts341"
+version = "0.1.0"
+description = ""
+authors = ["LouisPsn <lpierson002@enseirb-matmeca.fr>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+ultralytics = "^8.3.40"
+kagglehub = "^0.3.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+#commande = 'module.script:fonction'
+
+main = 'ts341.main:main'
+train = 'ts341.train:main'
