@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.10"
 ultralytics = "^8.3.40"
 kagglehub = "^0.3.4"
+pyrealsense2 = "^2.55.1.6486"
 
 
 [build-system]
@@ -20,3 +21,5 @@ build-backend = "poetry.core.masonry.api"
 
 main = 'ts341.main:main'
 train = 'ts341.train:main'
+extract = 'ts341.extraction:main'
+extract_vid = 'ts341.extraction:main_video'
