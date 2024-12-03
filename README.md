@@ -1,6 +1,4 @@
 # Hornets
-
-
 # Cahier des charges
 
 ## Description du besoin client
