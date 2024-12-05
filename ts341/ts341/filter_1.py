@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-input_video = "/home/louis/Documents/3A/Outils_imagerie/TD/hornets/video/ruche01_frelon01_lores.mp4"
+input_video = "/home/louis/Documents/3A/Outils_imagerie/TD/hornets/ts341/videos/Rec_ruche_3_avec_frelon_5 Benoit Renaud_device_0_sensor_1_Color_0_image_data.mp4"
 
 # video Inference
 
@@ -18,7 +18,7 @@ def vid_inf(vid_path):
     output_video = "output_recorded.mp4"
 
     # create the `VideoWriter()` object
-    out = cv2.VideoWriter(output_video, fourcc, fps, frame_size)
+    out = cv2.VideoWriter(output_video, fourcc, 30, frame_size)
 
     # Create Background Subtractor MOG2 object
     backSub = cv2.createBackgroundSubtractorKNN()
