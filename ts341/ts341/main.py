@@ -4,21 +4,20 @@ import math
 
 def main():
     # start webcam
-    cap = cv2.VideoCapture("/home/louis/Documents/3A/Outils d'imagerie pour la robotique/TD/hornets/Contexte Projet Imagerie(1)/Rec_ruche_3_avec_frelon_5 Benoit Renaud_device_0_sensor_1_Color_0_image_data.mp4")
+    cap = cv2.VideoCapture("ts341/videos/Rec_ruche_3_avec_frelon_5 Benoit Renaud_device_0_sensor_1_Color_0_image_data.mp4")
     cap.set(3, 640)
     cap.set(4, 480)
 
     # model
-    model = YOLO("yolo-Weights/yolov8n.pt")
+    model = YOLO("runs/detect/train25/weights/best.pt")
 
     # object classes
-    classNames = ["insect", "frelon", "bee", "hornet", "guêpe", "frelon asiatique", "frelon européen", "abeille"
-                ]
+    classNames = ["Vespa_velutina", "Vespa_crabro", "Vespula_vulgaris"]
 
 
     while True:
         success, img = cap.read()
-        results = model(img, stream=True, verbose=False)
+        results = model(img, stream=True)
 
         # coordinates
         for r in results:
@@ -49,7 +48,7 @@ def main():
 
                 cv2.putText(img, classNames[cls], org, font, fontScale, color, thickness)
 
-        cv2.imshow('Webcam', img)
+        # cv2.imshow('Webcam', img)
         if cv2.waitKey(1) == ord('q'):
             break
 

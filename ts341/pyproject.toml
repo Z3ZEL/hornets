@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.10"
 ultralytics = "^8.3.40"
 kagglehub = "^0.3.4"
+torch = "^2.5.1"
 
 
 [build-system]
