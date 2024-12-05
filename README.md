@@ -15,3 +15,14 @@ On propose de faire un pipeline en deux parties : une première partie dans laqu
 La solution prototypée pendant les 12 heures de cours pourra être amélioré en agrandissant le dataset de l'IA que nous allons entrainer, car il sera forcément limité par les données fournies dans le cadre de ce projet, ou en améliorant l'algorithme de traitement d'image.
 
 
+# Video Extractor
+
+```bash
+poetry run extract path_to_bag_file path_to_output_folder (optional)frame_rate_to_skip
+poetry run extract_vide path_to_bag_file path_to_output_folder 
+``` 
+
+**frame_rate_to_skip** : skip some image to get less for instance if 2, it will skip one image out of two
+
+**Note** : Be careful poetry run start from the project root, so if your video folder is above you need to specify ../path_to_bag_file for instance.
+

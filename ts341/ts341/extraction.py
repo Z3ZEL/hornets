@@ -97,7 +97,7 @@ def main(bag_file=sys.argv[1], output_folder=  sys.argv[2]):
         aligned_frames = align.process(frames)
 
 
-        color_frame = aligned_frames.get_color_frame()
+        color_frame = frames.get_color_frame()
         color_frame = np.asarray(color_frame.get_data())
         color_frame = cv2.cvtColor(color_frame, cv2.COLOR_RGB2BGR)
 
