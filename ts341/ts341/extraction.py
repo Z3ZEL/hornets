@@ -5,7 +5,7 @@ import sys
 import os
 
 
-RESOLUTION = (640, 480)
+RESOLUTION_FACTOR = 0.5
 MAX_RANGE = 2
 MIN_RANGE = 0.2
 
@@ -39,12 +39,20 @@ def main_video(bag_file=sys.argv[1], output_folder=sys.argv[2]):
 
     align_to = rs.stream.color
     align = rs.align(align_to)
-
+    frames = pipe.wait_for_frames()
+    color_frame = frames.get_color_frame()
+    if not color_frame:
+        raise Exception("No color frames found in the bag file.")
+    frame_width = color_frame.get_width()
+    frame_height = color_frame.get_height()
     # Define the codec and create VideoWriter object
-    out = cv2.VideoWriter(f'{output_folder}/output.avi', cv2.VideoWriter_fourcc(*'XVID'), 30, (640, 480))
+    out = cv2.VideoWriter(f'{output_folder}/output.avi', cv2.VideoWriter_fourcc(*'XVID'), 30, (int(frame_width*RESOLUTION_FACTOR), int(frame_height*RESOLUTION_FACTOR)))
     print("Writing video")
     while True:
-        frames = pipe.wait_for_frames()
+        try:
+            frames = pipe.wait_for_frames(timeout_ms=1000)
+        except:
+            break
         aligned_frames = align.process(frames)
 
         color_frame = aligned_frames.get_color_frame()
@@ -53,10 +61,10 @@ def main_video(bag_file=sys.argv[1], output_folder=sys.argv[2]):
 
         color_image = np.asanyarray(color_frame.get_data())
         color_image = cv2.cvtColor(color_image, cv2.COLOR_RGB2BGR)
+        color_image = cv2.resize(color_image, (int(frame_width*RESOLUTION_FACTOR), int(frame_height*RESOLUTION_FACTOR)))
 
         out.write(color_image)
 
-        print("Writing frame")
 
     out.release()
     pipe.stop()
@@ -73,6 +81,8 @@ def main(bag_file=sys.argv[1], output_folder=  sys.argv[2]):
 
     depth_sensor = profile.get_device().first_depth_sensor()
     depth_scale = depth_sensor.get_depth_scale()
+
+    
 
 
     align_to = rs.stream.depth
@@ -100,14 +110,20 @@ def main(bag_file=sys.argv[1], output_folder=  sys.argv[2]):
         depth_uint8 = np.uint8(depth_frame * 255)
         depth_float = np.float32(depth_frame) * depth_scale
 
+        #Get images size
+        depth_height, depth_width = depth_frame.shape
+        color_height, color_width, _ = color_frame.shape
+
+
+
         #Resize
-        color_frame = cv2.resize(color_frame, RESOLUTION)
-        depth_uint8 = cv2.resize(depth_uint8, RESOLUTION)
+        color_frame = cv2.resize(color_frame, (int(color_width*RESOLUTION_FACTOR), int(color_height*RESOLUTION_FACTOR)))  
+        depth_uint8 = cv2.resize(depth_uint8, (int(depth_width*RESOLUTION_FACTOR), int(depth_height*RESOLUTION_FACTOR)))
 
 
         if skip % divide == 0:
             cv2.imshow("Depth", depth_uint8)
-            cv2.imwrite(output_folder + "/depth_frame.jpg", depth_uint8)
+            cv2.imwrite(output_folder + f"/depth_frame{skip}.jpg", depth_uint8)
             cv2.imshow("Hornets", color_frame)
-            cv2.imwrite(output_folder + "/color_frame.jpg", color_frame)
+            cv2.imwrite(output_folder + f"/color_frame{skip}.jpg", color_frame)
         key = cv2.waitKey(1)
