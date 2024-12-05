@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-input_video = "/home/louis/Documents/3A/Outils_imagerie/TD/hornets/video/output.avi"
+input_video = "/home/louis/Documents/3A/Outils_imagerie/TD/hornets/video/ruche01_frelon01_lores.mp4"
 
 # video Inference
 
