@@ -7,6 +7,7 @@ import os
 
 RESOLUTION_FACTOR = 0.5
 MAX_RANGE = 2
+FRAMERATE = 30
 MIN_RANGE = 0.2
 
 def check_path(file, output_folder):
@@ -71,7 +72,7 @@ def main_video(bag_file=sys.argv[1], output_folder=sys.argv[2]):
 
 
 def main(bag_file=sys.argv[1], output_folder=  sys.argv[2]):
-    divide = sys.argv[3] if len(sys.argv) > 4 else 1
+    divide = int(sys.argv[3]) if len(sys.argv) >= 4 else 1
 
     pipe = rs.pipeline()
     config = rs.config()
@@ -127,3 +128,60 @@ def main(bag_file=sys.argv[1], output_folder=  sys.argv[2]):
             cv2.imshow("Hornets", color_frame)
             cv2.imwrite(output_folder + f"/color_frame{skip}.jpg", color_frame)
         key = cv2.waitKey(1)
+
+
+
+def extract_mp4(mp4_file=sys.argv[1], output_folder=  sys.argv[2]):
+    divide = int(sys.argv[3]) if len(sys.argv) >= 4 else 1
+
+    range_txt = sys.argv[4] if len(sys.argv) >= 5 else ""
+
+    ### Parse range like "10:20,50:52 ..."
+    ranges = []
+    if range_txt:
+        for r in range_txt.split(","):
+            start, end = r.split(":")
+            ranges.append((int(start), int(end)))
+    print("Ranges", ranges)
+    
+
+    cap = cv2.VideoCapture(mp4_file)
+
+    
+    if not cap.isOpened():
+        print("Error opening video stream or file")
+        sys.exit(1)
+
+    frame_count = 0
+    print("Divide", divide)
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        frame_count += 1
+        if frame_count % divide == 0:
+            # print("Saving frame", frame_count)
+            if len(ranges) > 0:
+                is_in_range = False
+                current_seconds = frame_count / FRAMERATE
+                
+                for start, end in ranges:
+                    if current_seconds >= start and current_seconds <= end:
+                        is_in_range = True
+                        print("Current seconds", current_seconds)
+                        break
+                else:
+                    continue
+
+                if not is_in_range:
+                    continue
+
+            frame_resized = cv2.resize(frame, (int(frame.shape[1] * RESOLUTION_FACTOR), int(frame.shape[0] * RESOLUTION_FACTOR)))
+            cv2.imshow('Frame', frame_resized)
+            cv2.imwrite(output_folder + f"/frame{frame_count}.jpg", frame_resized)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+    cap.release()
+    cv2.destroyAllWindows()

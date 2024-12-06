@@ -22,16 +22,16 @@ def main(video_path):
     cap = cv2.VideoCapture(video_path)
 
     # params for corner detection 
-    feature_params = dict( maxCorners = 200,   
-                        qualityLevel = 0.015, 
-                        minDistance = 3, 
-                        blockSize = 4 ) 
+    feature_params = dict(maxCorners=100, 
+                          qualityLevel=0.3, 
+                          minDistance=7, 
+                          blockSize=7) 
     
     # Parameters for lucas kanade optical flow 
-    lk_params = dict( winSize = (35, 35), 
-                    maxLevel = 2, 
-                    criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 
-                                10, 0.03)) 
+    lk_params = dict(winSize=(15, 15), 
+                     maxLevel=2, 
+                     criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 
+                               10, 0.03)) 
     
     # Create some random colors 
     color = np.random.randint(0, 255, (100, 3)) 
@@ -46,6 +46,8 @@ def main(video_path):
         k = cv2.waitKey(100) 
         cat = "train" if frame_index % 2 == 0 else "val"
         ret, frame = cap.read()
+        display_frame = frame.copy()
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         frame = cv2.GaussianBlur(frame, (5, 5), 4)
 
         ## Track features
@@ -53,7 +55,11 @@ def main(video_path):
             new_features_to_track = []
             for p0, class_name, old_bbox in features_to_track:
                 p1, st, err = cv2.calcOpticalFlowPyrLK(old_frame, frame, p0, None, **lk_params)
-                print(err)
+                ## If the majority of point is lost, discard the feature
+                if np.sum(st) < 0.5 * p1.shape[0]:
+                    continue
+
+
                 st = st.reshape(p1.shape[0])
                 good_new = p1[st == 1]
                 good_old = p0[st == 1]
@@ -65,12 +71,12 @@ def main(video_path):
                     a, b = new.ravel()
                     a, b = int(a), int(b)
                     #Draw
-                    cv2.circle(frame, (a, b), 5, color[i].tolist(), -1)
+                    cv2.circle(display_frame, (a, b), 5, color[i].tolist(), -1)
                 try:
                     ## Push the new features to track
                     mass_center = np.mean(good_new, axis=0).reshape(2)
                     bbox = np.array([mass_center[0] - old_bbox[2]/2, mass_center[1] - old_bbox[3]/2, old_bbox[2], old_bbox[3]])
-                    cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3])), (0,255,0), 2)
+                    cv2.rectangle(display_frame, (int(bbox[0]), int(bbox[1])), (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3])), (0,255,0), 2)
                 except ValueError:
                     continue
                 if len(good_new) > 0:
@@ -90,11 +96,10 @@ def main(video_path):
 
             mask = np.zeros_like(frame)
             mask[int(bbox[1]):int(bbox[1] + bbox[3]), int(bbox[0]):int(bbox[0] + bbox[2])] = 255
-            mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
 
 
             ## Get feature points in the selected region
-            p0 = cv2.goodFeaturesToTrack(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), mask = mask, **feature_params)
+            p0 = cv2.goodFeaturesToTrack(frame, mask = mask, **feature_params)
             
             ## Get only one feature point
             if p0 is not None:
@@ -104,10 +109,10 @@ def main(video_path):
             for p in p0:
                 a, b = p.ravel()
                 a, b = int(a), int(b)
-                cv2.circle(frame, (a, b), 5, (0, 0, 255), -1)
-            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3])), (0,255,0), 2)
+                cv2.circle(display_frame, (a, b), 5, (0, 0, 255), -1)
+            cv2.rectangle(display_frame, (int(bbox[0]), int(bbox[1])), (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3])), (0,255,0), 2)
             
-            cv2.imshow("Frame", frame)
+            cv2.imshow("Frame", display_frame)
         
             key = cv2.waitKey(0)
             if key == ord('b') or key == ord('h'):
@@ -139,7 +144,7 @@ def main(video_path):
         old_frame = frame.copy()
         # cv2.imwrite(f"{DATASET_PATH}/images/{cat}/frame{frame_index}.jpg", old_frame)
 
-        cv2.imshow("Frame", frame)
+        cv2.imshow("Frame", display_frame)
 
 
 
@@ -149,6 +154,7 @@ def main(video_path):
 
 if __name__ == "__main__":
     video_path = '../video/ruche01_frelon01_lores.mp4'  # Replace with your video file path
+    # video_path = '../video/ruche03_frelon_lores.mp4'  # Replace with your video file path
     # video_path = '../video/filter_1_1_2.mp4'
-    # video_path = "/home/esrodriguez/Downloads/frame_video.mp4"
+    video_path = "/home/esrodriguez/Downloads/frame_video(1).mp4"
     main(video_path)
