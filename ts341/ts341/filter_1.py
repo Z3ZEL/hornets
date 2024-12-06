@@ -33,9 +33,11 @@ def vid_inf(vid_path):
         ret, frame = cap.read()
 
         if ret:
+            # frame = cv2.resize(frame, (640, 360))
+
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-            cv2.normalize(frame, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
+            gray = cv2.normalize(gray, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
 
             # brightness = 10
             # # Adjusts the contrast by scaling the pixel values by 2.3 
@@ -57,7 +59,7 @@ def vid_inf(vid_path):
             # Apply erosion
             mask_eroded = cv2.morphologyEx(mask_thresh, cv2.MORPH_OPEN, kernel)
 
-            # # Find contours
+            # Find contours
             # contours, hierarchy = cv2.findContours(mask_eroded, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
             # min_contour_area = 500  # Define your minimum area threshold
@@ -68,12 +70,13 @@ def vid_inf(vid_path):
             #     x, y, w, h = cv2.boundingRect(cnt)
             #     frame_out = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 200), 3)
 
+            frame_masked = cv2.bitwise_and(frame, frame, mask=cv2.bitwise_not(mask_eroded))
+
             # saving the video file
-            out.write(cv2.cvtColor(mask_eroded, cv2.COLOR_GRAY2BGR))
+            out.write(frame_masked)
 
             # Display the resulting frame
-            # cv2.imshow("Frame_final", frame_out)
-            cv2.imshow("Frame_final", mask_eroded)
+            cv2.imshow("Frame_final", frame_masked)
 
             # Press Q on keyboard to exit
             if cv2.waitKey(30) & 0xFF == ord("q"):
