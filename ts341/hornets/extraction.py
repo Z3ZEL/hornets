@@ -177,7 +177,8 @@ def extract_mp4(mp4_file=sys.argv[1], output_folder=  sys.argv[2]):
                 if not is_in_range:
                     continue
 
-            frame_resized = cv2.resize(frame, (int(frame.shape[1] * RESOLUTION_FACTOR), int(frame.shape[0] * RESOLUTION_FACTOR)))
+            # frame_resized = cv2.resize(frame, (int(frame.shape[1] * RESOLUTION_FACTOR), int(frame.shape[0] * RESOLUTION_FACTOR)))
+            frame_resized = cv2.resize(frame, (640, 640))
             cv2.imshow('Frame', frame_resized)
             cv2.imwrite(output_folder + f"/frame{frame_count}.jpg", frame_resized)
             if cv2.waitKey(1) & 0xFF == ord('q'):
