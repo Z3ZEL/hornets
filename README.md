@@ -20,9 +20,11 @@ La solution prototypée pendant les 12 heures de cours pourra être amélioré e
 ```bash
 poetry run extract path_to_bag_file path_to_output_folder (optional)frame_rate_to_skip
 poetry run extract_vide path_to_bag_file path_to_output_folder 
+poetry run extract_mp4 path_to_mp4 ../output/ (optional)frame_rate_to_skip (optional)range_time_code eg : 0:2,4:6
 ``` 
 
 **frame_rate_to_skip** : skip some image to get less for instance if 2, it will skip one image out of two
+**range_time_code** : extract only the part of the video between the time code given, the time code is in the format s:s or s:s,s:s,... to extract from 0 to 2 seconds and from 4 to 6 seconds you can use 0:2,4:6
 
 **Note** : Be careful poetry run start from the project root, so if your video folder is above you need to specify ../path_to_bag_file for instance.
 

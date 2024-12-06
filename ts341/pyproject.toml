@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ts341"
+name = "hornets"
 version = "0.1.0"
 description = ""
 authors = ["LouisPsn <lpierson002@enseirb-matmeca.fr>"]
@@ -20,12 +20,12 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 #commande = 'module.script:fonction'
 
-main = 'ts341.main:main'
-train = 'ts341.train:main'
-extract = 'ts341.extraction:main'
-extract_vid = 'ts341.extraction:main_video'
-filter_1 = 'ts341.filter_1:vid_inf'
-
-MOG_1 = 'ts341.MOG:basic'
-MOG_2 = 'ts341.MOG:basic_2'
-MOG_3 = 'ts341.MOG:basic_3'
+main = 'hornets.main:main'
+train = 'hornets.train:main'
+extract = 'hornets.extraction:main'
+extract_vid = 'hornets.extraction:main_video'
+extract_mp4 = 'hornets.extraction:extract_mp4'
+filter_1 = 'hornets.filter_1:vid_inf'
+MOG_1 = 'hornets.MOG:basic'
+MOG_2 = 'hornets.MOG:basic_2'
+MOG_3 = 'hornets.MOG:basic_3'
