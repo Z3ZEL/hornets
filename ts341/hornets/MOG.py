@@ -143,7 +143,37 @@ def basic_2():
     cap.release()
     cv.destroyAllWindows()
 
+def filtre_2(frame, fgbg):
+    kernel_flou = np.array([[1, 1, 1, 1],
+                            [1, 1, 1, 1],
+                            [1, 1, 1, 1],
+                            [1, 1, 1, 1]]) / 16 
+
+    kernel_gaussian = np.array([[1, 2, 1],
+                                [2, 4, 2],
+                                [1, 2, 1]]) / 16
+
+    kernel_int = np.array([[-1, -1, -1],
+                    [-1, 8, -1],
+                    [-1, -1, -1]]) 
+
+    kernel_laplacian = np.array([[ 0, 1, 0],
+                        [ 1, -4, 1],
+                        [ 0, 1, 0]])
     
+    
+    output = cv.filter2D(frame, -1, kernel_flou)
+    
+    
+    output = fgbg.apply(output)
+    
+    frame_masked = cv.bitwise_and(frame, frame, mask=output)
+
+    return frame_masked
+
+
+    # saving the video file
+    # out.write(cv.cvtColor(frame_masked, cv.COLOR_GRAY2BGR))
 def basic_3():
     
     cap = cv.VideoCapture('/home/louis/Documents/3A/Outils_imagerie/TD/hornets/video/ruche03_frelon_lores.mp4')
