@@ -17,7 +17,7 @@ def main():
     # print("Path to dataset files:", path)
     
     # Load the model
-    model = YOLO("yolo11n-obb.pt")
+    model = YOLO("yolo11l-obb.pt")
     
     # transform = transforms.Compose([
     #     transforms.Resize((32, 32)),
