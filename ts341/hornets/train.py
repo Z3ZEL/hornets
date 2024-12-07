@@ -17,7 +17,7 @@ def main():
     # print("Path to dataset files:", path)
     
     # Load the model
-    model = YOLO("yolo-Weights/yolo11n.pt")
+    model = YOLO("yolo11l-obb.pt")
     
     # transform = transforms.Compose([
     #     transforms.Resize((32, 32)),
@@ -31,4 +31,4 @@ def main():
     # print("Mon data_loader")
 
     # Train the model
-    model.train(data="/home/louis/Documents/3A/Outils_imagerie/TD/hornets/ts341/datasets/dataset_3/vespa-velutina-v-crabro-vespulina-vulgaris/versions/8/config.yaml", epochs=1, batch=32, imgsz=640, save=True)
+    model.train(data="/home/louis/Documents/3A/Outils_imagerie/TD/hornets/datasets/test_train/config.yaml", epochs=1, batch=32, imgsz=640, save=True)
