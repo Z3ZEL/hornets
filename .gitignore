@@ -163,8 +163,9 @@ cython_debug/
 
 
 videos/
-runs/
-yolo11l-obb.pt
+vid/
+ts341/runs/
+
 
 
 .gitignore
