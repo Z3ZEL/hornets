@@ -1,4 +1,20 @@
 # Hornets
+
+- [Hornets](#hornets)
+- [Cahier des charges](#cahier-des-charges)
+  - [Description du besoin client](#description-du-besoin-client)
+  - [Verrous technologiques](#verrous-technologiques)
+  - [Description du prototype](#description-du-prototype)
+  - [Description de la solution proposée long terme](#description-de-la-solution-proposée-long-terme)
+- [Installation](#installation)
+  - [Prérequis](#prérequis)
+  - [Installation](#installation-1)
+- [Utilisation](#utilisation)
+- [Frelon/Abeille Detector](#frelonabeille-detector)
+- [Video Extractor (For development)](#video-extractor-for-development)
+
+
+
 # Cahier des charges
 
 ## Description du besoin client
@@ -14,8 +30,33 @@ On propose de faire un pipeline en deux parties : une première partie dans laqu
 ## Description de la solution proposée long terme
 La solution prototypée pendant les 12 heures de cours pourra être amélioré en agrandissant le dataset de l'IA que nous allons entrainer, car il sera forcément limité par les données fournies dans le cadre de ce projet, ou en améliorant l'algorithme de traitement d'image.
 
+# Installation
 
-# Video Extractor
+## Prérequis
+- Python **3.11**
+- Poetry
+
+## Installation
+```bash
+poetry install
+```
+
+# Utilisation
+
+# Frelon/Abeille Detector
+
+```bash
+poetry run main path_to_mp4 yolo_weights_path=yolo_weights/best.pt
+```
+> Lancement du programme de détection de frelons et d'abeilles sur une vidéo. Par default notre modèle est utilisé pour la détection des frelons et des abeilles. Vous pouvez spécifier un autre modèle en utilisant le paramètre `yolo_weights_path`.
+
+---
+
+
+
+
+
+# Video Extractor (For development)
 
 ```bash
 poetry run extract path_to_bag_file path_to_output_folder (optional)frame_rate_to_skip
