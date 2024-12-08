@@ -1,0 +1,9 @@
+path: E:\Dev\Playground\hornets\datasets\ban
+train: 'images/train'
+val: 'images/val'
+
+# class names
+names:
+
+  0: bee
+  1: hornet
